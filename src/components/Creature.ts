@@ -32,11 +32,9 @@ export class Creature {
                 const velocity_x = delta_x * coef_x;
                 const velocity_y = Math.min(-idle_jump, delta_y * coef_y);
                 this.sprite.body.setVelocity(velocity_x, velocity_y);
-                console.log(`Jump to Player x=${x.toFixed(0)} y=${y.toFixed(0)} delta_x=${delta_x.toFixed(0)} delta_y=${delta_y.toFixed(0)} dist=${dist.toFixed(0)} velocity_x=${velocity_x.toFixed(0)} velocity_y=${velocity_y.toFixed(0)}`);
             }
             else {
                 this.sprite.body.setVelocity(0, -idle_jump);            // jump up
-                console.log(`Jump idle velocity_y=${(-idle_jump).toFixed(0)}`);
             }
         }
         else {
