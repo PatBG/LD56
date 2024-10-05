@@ -75,8 +75,9 @@ export class Game extends Scene {
     }
 
     update(_time: number, _delta: number): void {
-        this.player.update();
-        this.creatures.forEach(creature => creature.update(this.player.isAction, this.player.sprite.x, this.player.sprite.y));
+        this.player.update(_time, _delta);
+        this.creatures.forEach(creature => creature.update(this.player.isAction, this.player.IsInRangeForAction.bind(this.player),
+            this.player.sprite.x, this.player.sprite.y));
     }
 
     collectCoin(_sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
