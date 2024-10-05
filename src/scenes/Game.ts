@@ -37,11 +37,6 @@ export class Game extends Scene {
 
         this.player = new Player(this, groundLayer, 200, 200);
 
-        this.creatures = [];
-        this.creatures.push(new Creature(this, groundLayer, 300, 200));
-        this.creatures.push(new Creature(this, groundLayer, 350, 200));
-        this.creatures.push(new Creature(this, groundLayer, 400, 200));
-
         // coin image used as tileset
         const coinTiles = map.addTilesetImage('coin');
         if (!coinTiles) { console.error('coinTiles is not set'); return; }
@@ -50,9 +45,27 @@ export class Game extends Scene {
         if (!this.coinLayer) { console.error('coinLayer is not set'); return; }
         this.coinLayer.setTileIndexCallback(17, this.collectCoin, this); // the coin id is 17
         // when the player overlaps with a tile with index 17, collectCoin will be called    
-        this.physics.add.overlap(this.player.sprite, this.coinLayer);
+        // this.physics.add.overlap(this.player.sprite, this.coinLayer);
 
-        this.text = this.add.text(20, 570, '0', {
+        this.creatures = [];
+        // for (let i = 0; i < 10; i++) {
+        //     const creature = new Creature(this, groundLayer, 200 + i * 50, 100);
+        //     this.physics.add.overlap(creature.sprite, this.coinLayer);
+        //     this.creatures.push(creature);
+        // }
+
+        this.coinLayer.forEachTile(tile => {
+            if (tile.index === 18) {
+                const creature = new Creature(this, groundLayer, tile.x * 48 + 24, tile.y * 48 + 24);
+                if (this.coinLayer != null) {
+                    this.physics.add.overlap(creature.sprite, this.coinLayer);
+                }
+                this.creatures.push(creature);
+                this.coinLayer?.removeTileAt(tile.x, tile.y);
+            }
+        });
+
+        this.text = this.add.text(-144, -72, '0', {
             fontSize: '20px',
             backgroundColor: '#ffffff',
             padding: {
@@ -69,9 +82,11 @@ export class Game extends Scene {
         // set bounds so the camera won't go outside the game world
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         // make the camera follow the player
-        this.cameras.main.startFollow(this.player.sprite);
+        this.cameras.main.startFollow(this.player.sprite);//, false, 1, 1, 500, 500);
+        this.cameras.main.setDeadzone(400, 200);
         // set background color, so the sky is not black    
-        this.cameras.main.setBackgroundColor('#ccccff');
+        this.cameras.main.setBackgroundColor('#CCCCFF');
+        this.cameras.main.setZoom(0.75);
     }
 
     update(_time: number, _delta: number): void {
