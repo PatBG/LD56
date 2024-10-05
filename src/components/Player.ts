@@ -3,6 +3,9 @@ export class Player {
     sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
     isAction: boolean = false;
+    rangeAction: number;
+    readonly rangeActionMax = 300;
+    graphics: Phaser.GameObjects.Graphics;
 
     constructor(scene: Phaser.Scene, groundLayer: Phaser.Tilemaps.TilemapLayer, x: number, y: number) {
         // create the player sprite    
@@ -19,9 +22,12 @@ export class Player {
         });
 
         this.cursors = scene.input.keyboard?.createCursorKeys();
+
+        this.rangeAction = 0;
+        this.graphics = scene.add.graphics();
     }
 
-    update() {
+    update(_time: number, delta: number) {
         const moveLeft = this.cursors ? this.cursors.left.isDown : false;
         const moveRight = this.cursors ? this.cursors.right.isDown : false;
         const moveUp = this.cursors ? this.cursors.up.isDown : false;
@@ -48,5 +54,27 @@ export class Player {
         }
 
         this.isAction = isAction;
+        this.graphics.clear();
+        if (isAction) {
+            if (this.rangeAction < this.rangeActionMax) {
+                this.rangeAction = Math.min(this.rangeActionMax, this.rangeAction + 0.3 * delta);
+            }
+            this.graphics.fillStyle(0xff0000);
+            this.graphics.alpha = 0.05;
+            const circle = new Phaser.Geom.Circle(this.sprite.x, this.sprite.y, this.rangeAction);
+            this.graphics.fillCircleShape(circle);
+        }
+        else {
+            this.rangeAction = 0;
+            this.graphics.fillStyle(0xff0000);
+            this.graphics.strokeCircle(this.sprite.x, this.sprite.y, 10);
+        }
+    }
+
+    IsInRangeForAction(x: number, y: number): boolean {
+        const delta_x = x - this.sprite.x;
+        const delta_y = y - this.sprite.y;
+        const dist = Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+        return dist <= this.rangeAction;
     }
 }
