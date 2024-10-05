@@ -10,16 +10,17 @@ export class Player {
     constructor(scene: Phaser.Scene, groundLayer: Phaser.Tilemaps.TilemapLayer, x: number, y: number) {
         // create the player sprite    
         this.sprite = scene.physics.add.sprite(x, y, 'player');
+        //this.sprite.setCircle(this.sprite.width / 2);
         this.sprite.setBounce(0.2); // our player will bounce from items
         this.sprite.setCollideWorldBounds(true); // don't go out of the map
         scene.physics.add.collider(groundLayer, this.sprite);
 
-        scene.anims.create({
-            key: 'walk',
-            frames: scene.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
+        // scene.anims.create({
+        //     key: 'walk',
+        //     frames: scene.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
+        //     frameRate: 10,
+        //     repeat: -1
+        // });
 
         this.cursors = scene.input.keyboard?.createCursorKeys();
 
@@ -66,8 +67,6 @@ export class Player {
         }
         else {
             this.rangeAction = 0;
-            this.graphics.fillStyle(0xff0000);
-            this.graphics.strokeCircle(this.sprite.x, this.sprite.y, 10);
         }
     }
 

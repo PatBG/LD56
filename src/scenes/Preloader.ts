@@ -33,11 +33,11 @@ export class Preloader extends Scene {
         // map made with Tiled in JSON format
         this.load.tilemapTiledJSON('map', 'assets/map.json');
         // tiles in spritesheet 
-        this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 70, frameHeight: 70 });
+        this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 48, frameHeight: 48 });
         // simple coin image
         this.load.image('coin', 'assets/coinGold.png');
         // player animations
-        this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+        this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 64 });
 
         this.load.spritesheet('creature', 'assets/creature.png', { frameWidth: 16, frameHeight: 16 });
     }
