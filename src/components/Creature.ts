@@ -34,7 +34,7 @@ export class Creature {
                 this.sprite.body.setVelocity(velocity_x, velocity_y);
             }
             else {
-                this.sprite.body.setVelocity(0, -idle_jump);            // jump up
+                this.sprite.body.setVelocity(Phaser.Math.Between(-4, 4), -idle_jump);            // jump up
             }
         }
         else {
