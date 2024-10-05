@@ -39,7 +39,7 @@ export class Preloader extends Scene {
         // player animations
         this.load.atlas('player', 'assets/player.png', 'assets/player.json');
 
-        this.load.image('creature', 'assets/creature.png');
+        this.load.spritesheet('creature', 'assets/creature.png', { frameWidth: 16, frameHeight: 16 });
     }
 
     create() {
