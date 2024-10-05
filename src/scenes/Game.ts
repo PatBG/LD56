@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Creature } from '../components/creature';
 
 export class Game extends Scene {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
@@ -6,6 +7,8 @@ export class Game extends Scene {
     coinLayer: Phaser.Tilemaps.TilemapLayer | null;
     text: Phaser.GameObjects.Text;
     score: number;
+    creatures: Creature[] = [];
+    spaceBar: Phaser.Input.Keyboard.Key | undefined;
 
     constructor() {
         super('Game');
@@ -45,6 +48,10 @@ export class Game extends Scene {
             frameRate: 10,
             repeat: -1
         });
+
+        this.creatures.push(new Creature(this, groundLayer, 300, 200));
+        this.creatures.push(new Creature(this, groundLayer, 350, 200));
+        this.creatures.push(new Creature(this, groundLayer, 400, 200));
 
         // coin image used as tileset
         const coinTiles = map.addTilesetImage('coin');
@@ -87,11 +94,12 @@ export class Game extends Scene {
             this.player.anims.play('walk', true);           // play walk animation
             this.player.flipX = true;                        // flip the sprite to the left
         }
-        else if (this.cursors?.right.isDown) {              // if the right arrow key is down
+        else if (this.cursors.right.isDown) {              // if the right arrow key is down
             this.player.body.setVelocityX(200);             // move right
             this.player.anims.play('walk', true);           // play walk animatio
             this.player.flipX = false;                      // use the original sprite looking to the right
-        } else {
+        }
+        else {
             this.player.body.setVelocityX(0);
             this.player.anims.play('idle', true);
         }
@@ -99,11 +107,13 @@ export class Game extends Scene {
         if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
             this.player.body.setVelocityY(-500);            // jump up
         }
+
+        this.creatures.forEach(creature => creature.update());
     }
 
     collectCoin(_sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
         this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile/coin
-        this.score ++;                                      // increment the score
+        this.score++;                                      // increment the score
         this.text.setText(`${this.score}`);                 // set the text to show the current score
         return false;
     }

@@ -38,6 +38,8 @@ export class Preloader extends Scene {
         this.load.image('coin', 'assets/coinGold.png');
         // player animations
         this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+
+        this.load.image('creature', 'assets/creature.png');
     }
 
     create() {
