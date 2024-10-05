@@ -50,8 +50,15 @@ export class Player {
             this.sprite.setFrame(0);                          // set the player's frame to 0 (stand still)
         }
 
-        if (moveUp && this.sprite.body.onFloor()) {
-            this.sprite.body.setVelocityY(-500);            // jump up
+        if (this.sprite.body.onFloor()) {
+            if (moveUp && this.sprite.body.onFloor()) {
+                this.sprite.body.setVelocityY(-500);            // jump up
+            }
+            else {
+                if (moveLeft || moveRight) {
+                    this.sprite.body.setVelocityY(-200);
+                }
+            }
         }
 
         this.isAction = isAction;
