@@ -1,14 +1,13 @@
 import { Scene } from 'phaser';
 import { Creature } from '../components/creature';
+import { Player } from '../components/Player';
 
 export class Game extends Scene {
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-    player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    player: Player;
     coinLayer: Phaser.Tilemaps.TilemapLayer | null;
     text: Phaser.GameObjects.Text;
     score: number;
-    creatures: Creature[] = [];
-    spaceBar: Phaser.Input.Keyboard.Key | undefined;
+    creatures: Creature[];
 
     constructor() {
         super('Game');
@@ -36,19 +35,9 @@ export class Game extends Scene {
         this.physics.world.bounds.width = groundLayer.width;
         this.physics.world.bounds.height = groundLayer.height;
 
-        // create the player sprite    
-        this.player = this.physics.add.sprite(200, 200, 'player');
-        this.player.setBounce(0.2); // our player will bounce from items
-        this.player.setCollideWorldBounds(true); // don't go out of the map
-        this.physics.add.collider(groundLayer, this.player);
+        this.player = new Player(this, groundLayer, 200, 200);
 
-        this.anims.create({
-            key: 'walk',
-            frames: this.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
+        this.creatures = [];
         this.creatures.push(new Creature(this, groundLayer, 300, 200));
         this.creatures.push(new Creature(this, groundLayer, 350, 200));
         this.creatures.push(new Creature(this, groundLayer, 400, 200));
@@ -61,7 +50,7 @@ export class Game extends Scene {
         if (!this.coinLayer) { console.error('coinLayer is not set'); return; }
         this.coinLayer.setTileIndexCallback(17, this.collectCoin, this); // the coin id is 17
         // when the player overlaps with a tile with index 17, collectCoin will be called    
-        this.physics.add.overlap(this.player, this.coinLayer);
+        this.physics.add.overlap(this.player.sprite, this.coinLayer);
 
         this.text = this.add.text(20, 570, '0', {
             fontSize: '20px',
@@ -75,40 +64,19 @@ export class Game extends Scene {
             color: '#000000'
         });
         this.text.setScrollFactor(0);
-        this.cursors = this.input.keyboard?.createCursorKeys();
         this.score = 0;
 
         // set bounds so the camera won't go outside the game world
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         // make the camera follow the player
-        this.cameras.main.startFollow(this.player);
+        this.cameras.main.startFollow(this.player.sprite);
         // set background color, so the sky is not black    
         this.cameras.main.setBackgroundColor('#ccccff');
     }
 
     update(_time: number, _delta: number): void {
-        if (!this.cursors) return;
-
-        if (this.cursors.left.isDown) {                     // if the left arrow key is down
-            this.player.body.setVelocityX(-200);            // move left
-            this.player.anims.play('walk', true);           // play walk animation
-            this.player.flipX = true;                        // flip the sprite to the left
-        }
-        else if (this.cursors.right.isDown) {              // if the right arrow key is down
-            this.player.body.setVelocityX(200);             // move right
-            this.player.anims.play('walk', true);           // play walk animatio
-            this.player.flipX = false;                      // use the original sprite looking to the right
-        }
-        else {
-            this.player.body.setVelocityX(0);
-            this.player.anims.play('idle', true);
-        }
-
-        if ((this.cursors.space.isDown || this.cursors.up.isDown) && this.player.body.onFloor()) {
-            this.player.body.setVelocityY(-500);            // jump up
-        }
-
-        this.creatures.forEach(creature => creature.update());
+        this.player.update();
+        this.creatures.forEach(creature => creature.update(this.player.isAction, this.player.sprite.x, this.player.sprite.y));
     }
 
     collectCoin(_sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
