@@ -31,7 +31,10 @@ export class Preloader extends Scene {
         this.load.image('logo', 'assets/logo.png');
 
         // map made with Tiled in JSON format
-        this.load.tilemapTiledJSON('map', 'assets/map.json');
+        this.load.tilemapTiledJSON('map0', 'assets/map0.json');
+        this.load.tilemapTiledJSON('map1', 'assets/map1.json');
+        this.load.tilemapTiledJSON('mapTest', 'assets/mapTest.json');
+
         // tiles in spritesheet 
         this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 48, frameHeight: 48 });
         // tiles coin image
