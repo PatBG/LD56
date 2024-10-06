@@ -32,7 +32,7 @@ export class Preloader extends Scene {
         // map made with Tiled in JSON format
         this.load.tilemapTiledJSON('map1', 'map1.json');
         this.load.tilemapTiledJSON('map2', 'map2.json');
-        Global.totalLevels = 5;
+        Global.totalLevels = 2;
 
         this.load.tilemapTiledJSON('mapTest', 'mapTest.json');
 
