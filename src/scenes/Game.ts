@@ -1,19 +1,7 @@
 import { Scene } from 'phaser';
 import { Creature, CreatureState } from '../components/Creature';
 import { Player } from '../components/Player';
-
-
-const FONT_SIZE = 24;
-const FONT_FAMILY = 'Comic Sans MS';
-const MENU_STYLE = {
-    fontFamily: FONT_FAMILY,
-    fontSize: FONT_SIZE, 
-    color: '#ffffff',
-    // color: '#ede0c5',
-    stroke: '#000000', 
-    strokeThickness: 4,
-    align: 'center'
-}
+import { Global } from '../components/Global';
 
 export class Game extends Scene {
     player: Player;
@@ -22,7 +10,7 @@ export class Game extends Scene {
     creatures: Creature[];
 
     // Scrores numbers
-    nbSatiated: number;
+    nbFeeded: number;
     nbSleepy: number;
     nbCreatures: number;
 
@@ -32,11 +20,11 @@ export class Game extends Scene {
 
     create() {
         this.input.keyboard?.addKey('ESC').on('down', () => {
-            this.scene.start('GameOver');
+            this.scene.start('MainMenu');
         }, this);
 
         // load the map 
-        const map = this.make.tilemap({ key: 'map' });
+        const map = this.make.tilemap({ key: 'map0' });
 
         // tiles for the ground layer
         const groundTiles = map.addTilesetImage('tiles');
@@ -88,10 +76,10 @@ export class Game extends Scene {
         });
         this.nbCreatures = this.creatures.length;
 
-        this.textScore = this.add.text(-144, -72, '', MENU_STYLE);
+        this.textScore = this.add.text(-144, -72, '', Global.SCORE_STYLE);
         this.textScore.setScrollFactor(0);
 
-        this.nbSatiated = 0;
+        this.nbFeeded = 0;
         this.nbSleepy = 0;
         this.displayScore();
 
@@ -115,18 +103,21 @@ export class Game extends Scene {
         this.creatures.forEach(creature => {
             if (creature.sprite === sprite) {
                 if (creature.creatureState === CreatureState.Hungry && tile.index === 17) {
-                    creature.creatureState = CreatureState.Satiated;
+                    creature.creatureState = CreatureState.Feeded;
                     creature.sprite.setFrame(creature.sprite.frame.name + 2);
                     this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
-                    this.nbSatiated++;
+                    this.nbFeeded++;
                     this.displayScore();
                 }
-                else if (creature.creatureState === CreatureState.Satiated && tile.index === 19) {
+                else if (creature.creatureState === CreatureState.Feeded && tile.index === 19) {
                     creature.creatureState = CreatureState.Sleepy;
                     creature.sprite.setFrame(4);
                     creature.coinCollider.destroy(); // remove the collider
                     this.nbSleepy++;
                     this.displayScore();
+                    if (this.nbSleepy === this.nbCreatures) {
+                        this.endLevel();
+                    }
                 }
             }
         });
@@ -134,7 +125,11 @@ export class Game extends Scene {
     }
 
     displayScore() {
-        const txt = `${this.nbSatiated}/${this.nbCreatures} Satiated     ${this.nbSleepy}/${this.nbCreatures} Sleepy`;
+        const txt = `${this.nbFeeded}/${this.nbCreatures} Feeded     ${this.nbSleepy}/${this.nbCreatures} Sleepy`;
         this.textScore.setText(txt);
+    }
+
+    endLevel() {
+        console.log(`End of level`);	
     }
 }
