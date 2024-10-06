@@ -2,10 +2,23 @@ import { Scene } from 'phaser';
 import { Creature, CreatureState } from '../components/Creature';
 import { Player } from '../components/Player';
 
+
+const FONT_SIZE = 24;
+const FONT_FAMILY = 'Comic Sans MS';
+const MENU_STYLE = {
+    fontFamily: FONT_FAMILY,
+    fontSize: FONT_SIZE, 
+    color: '#ffffff',
+    // color: '#ede0c5',
+    stroke: '#000000', 
+    strokeThickness: 4,
+    align: 'center'
+}
+
 export class Game extends Scene {
     player: Player;
     coinLayer: Phaser.Tilemaps.TilemapLayer | null;
-    text: Phaser.GameObjects.Text;
+    textScore: Phaser.GameObjects.Text;
     creatures: Creature[];
 
     // Scrores numbers
@@ -75,18 +88,9 @@ export class Game extends Scene {
         });
         this.nbCreatures = this.creatures.length;
 
-        this.text = this.add.text(-144, -72, '', {
-            fontSize: '20px',
-            backgroundColor: '#ffffff',
-            padding: {
-                left: 10,
-                right: 10,
-                top: 5,
-                bottom: 5
-            },
-            color: '#000000'
-        });
-        this.text.setScrollFactor(0);
+        this.textScore = this.add.text(-144, -72, '', MENU_STYLE);
+        this.textScore.setScrollFactor(0);
+
         this.nbSatiated = 0;
         this.nbSleepy = 0;
         this.displayScore();
@@ -120,12 +124,6 @@ export class Game extends Scene {
                 else if (creature.creatureState === CreatureState.Satiated && tile.index === 19) {
                     creature.creatureState = CreatureState.Sleepy;
                     creature.sprite.setFrame(4);
-
-                    // console.log("CreatureState.Sleepy", creature.sprite.body.friction, creature.sprite.body.mass);
-                    // creature.sprite.body.friction = new Phaser.Math.Vector2(1, 10);
-                    // creature.sprite.body.mass = 0.1;
-                    // console.log(creature.sprite.body.friction, creature.sprite.body.mass);
-
                     creature.coinCollider.destroy(); // remove the collider
                     this.nbSleepy++;
                     this.displayScore();
@@ -136,6 +134,7 @@ export class Game extends Scene {
     }
 
     displayScore() {
-        this.text.setText(`${this.nbSatiated}/${this.nbCreatures} Satiated   ${this.nbSleepy}/${this.nbCreatures} Sleepy`);
+        const txt = `${this.nbSatiated}/${this.nbCreatures} Satiated     ${this.nbSleepy}/${this.nbCreatures} Sleepy`;
+        this.textScore.setText(txt);
     }
 }
