@@ -5,7 +5,7 @@ interface IsInRange {
 
 export enum CreatureState {
     Hungry = 0,
-    Satiated = 2,
+    Feeded = 2,
     Sleepy = 4,
 }
 
