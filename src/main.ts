@@ -1,3 +1,4 @@
+import { Global } from './components/Global';
 import { Boot } from './scenes/Boot';
 import { Game as MainGame } from './scenes/Game';
 import { MainMenu } from './scenes/MainMenu';
@@ -9,8 +10,8 @@ import { Game, Types } from "phaser";
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 922,
-    height: 487,
+    width: Global.SCREEN_WIDTH,
+    height: Global.SCREEN_HEIGHT,
     parent: 'game-container',
     backgroundColor: '#028af8',
     scale: {

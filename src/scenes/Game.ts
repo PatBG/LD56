@@ -31,7 +31,7 @@ export class Game extends Scene {
         }, this);
 
         // load the map 
-        const map = this.make.tilemap({ key: 'map0' });
+        const map = this.make.tilemap({ key: `map${Global.level}` });
 
         // tiles for the ground layer
         const groundTiles = map.addTilesetImage('tiles');
@@ -137,6 +137,18 @@ export class Game extends Scene {
     }
 
     endLevel() {
-        console.log(`End of level`);	
+        console.log(`End of level`);
+        if (Global.level < Global.totalLevels) {
+            Global.level++;
+            this.scene.start('Game');
+        }
+        else {
+            this.endGame();
+        }
+    }
+
+    endGame() {
+        console.log(`End of game`);
+        this.scene.start('MainMenu');
     }
 }

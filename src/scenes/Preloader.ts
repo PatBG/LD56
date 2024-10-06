@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Global } from '../components/Global';
 
 export class Preloader extends Scene {
     constructor() {
@@ -25,24 +26,26 @@ export class Preloader extends Scene {
     }
 
     preload() {
-        //  Load the assets for the game - Replace with your own assets
-        // this.load.setPath('assets');
-
-        this.load.image('logo', 'assets/logo.png');
+        //  Load the assets for the game
+        this.load.setPath('assets');
 
         // map made with Tiled in JSON format
-        this.load.tilemapTiledJSON('map0', 'assets/map0.json');
-        this.load.tilemapTiledJSON('map1', 'assets/map1.json');
-        this.load.tilemapTiledJSON('mapTest', 'assets/mapTest.json');
+        this.load.tilemapTiledJSON('map1', 'map1.json');
+        this.load.tilemapTiledJSON('map2', 'map2.json');
+        Global.totalLevels = 5;
+
+        this.load.tilemapTiledJSON('mapTest', 'mapTest.json');
 
         // tiles in spritesheet 
-        this.load.spritesheet('tiles', 'assets/tiles.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('tiles', 'tiles.png', { frameWidth: 48, frameHeight: 48 });
         // tiles coin image
-        this.load.spritesheet('coin', 'assets/coinGold.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('coin', 'coinGold.png', { frameWidth: 48, frameHeight: 48 });
         // player animations
-        this.load.spritesheet('player', 'assets/player.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player', 'player.png', { frameWidth: 64, frameHeight: 64 });
 
-        this.load.spritesheet('creature', 'assets/creature.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('creature', 'creature.png', { frameWidth: 16, frameHeight: 16 });
+
+        this.load.image('button', 'button.png');
     }
 
     create() {
