@@ -42,7 +42,9 @@ export class Game extends Scene {
         if (!groundLayer) { console.error('groundLayer is not set'); return; }
 
         // Create eye candy layers
-        map.createLayer('Background', groundTiles, 0, 0);
+        const backgroundLayer = map.createLayer('Background', groundTiles, 0, 0);
+        if (!backgroundLayer) { console.error('backgroundLayer is not set'); return; }
+        backgroundLayer.depth = -1;
         const foregroundLayer = map.createLayer('Foreground', groundTiles, 0, 0);
         if (!foregroundLayer) { console.error('foregroundLayer is not set'); return; }
         foregroundLayer.depth = 1;
