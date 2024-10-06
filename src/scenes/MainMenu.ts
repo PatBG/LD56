@@ -45,10 +45,23 @@ export class MainMenu extends Scene {
                 }
             );
         }
+
+        this.displayButton(
+            buttonX,
+            buttonY,
+            `Reset progress`,
+            Global.maxLevel > 1,
+            () => {
+                Global.resetLevel();
+                console.log(`Reset progress`);
+                this.scene.start('MainMenu');
+            }
+        );
+
     }
 
     displayButton(x: number, y: number, text: string, enabled: boolean, callback: () => void) {
-        const button = this.add.nineslice(x, y, 'button', 0, 200, 60, 32, 32, 32, 32);
+        const button = this.add.nineslice(x, y, 'button', 0, 200, 60, 16, 16, 16, 16);
         if (enabled) {
             button.setInteractive().on('pointerup', callback);
         }
