@@ -34,9 +34,11 @@ export class Creature {
         }
         else {
             const isInRange = isInRangeCallback(this.sprite.x, this.sprite.y);
-            if (isInRange && isAction && this.goToPlayer === false) {
-                this.goToPlayer = true;
-            }
+            // if (isInRange && isAction && this.goToPlayer === false) {
+            //     this.goToPlayer = true;
+            // }
+            this.goToPlayer = isInRange && isAction;
+
             this.sprite.setFrame(this.creatureState.valueOf() + (this.goToPlayer ? 1 : 0));
             if (this.sprite.body.onFloor()) {                           // if creature is on the ground: jump!
                 const idle_jump = 200 + Phaser.Math.Between(50, 0);
