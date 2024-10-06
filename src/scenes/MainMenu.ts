@@ -22,8 +22,8 @@ export class MainMenu extends Scene {
             Global.MENU_STYLE).setOrigin(0.5);
 
         this.add.text(Global.SCREEN_CENTER_X, Global.SCREEN_CENTER_Y - 100,
-            'Created from scratch in 48h (Compo version)\r\n' +
-            'using Phaser 3, TypeScript, Tiled, Krita, Audacity and VS Code',
+            'Created in 48h (Compo version)\r\n' +
+            'using Phaser 3, TypeScript, Tiled, Krita and VS Code',
             Global.SCORE_STYLE).setOrigin(0.5);
 
         // Global.resetLevel();
@@ -36,7 +36,7 @@ export class MainMenu extends Scene {
             this.displayButton(
                 buttonX + ((i % 2 ? -200 : 200)),
                 buttonY + (Math.floor((i - 1) / 2)) * 80,
-                `Level ${i}` + (i == 1 ? ' (guide)' : ''),
+                `Level ${i}`, // + (i == 1 ? ' (guide)' : ''),
                 i <= Global.maxLevel,
                 () => {
                     Global.level = i;
@@ -46,18 +46,19 @@ export class MainMenu extends Scene {
             );
         }
 
-        this.displayButton(
-            buttonX,
-            buttonY,
-            `Reset progress`,
-            Global.maxLevel > 1,
-            () => {
-                Global.resetLevel();
-                console.log(`Reset progress`);
-                this.scene.start('MainMenu');
-            }
-        );
-
+        if (Global.debug) {
+            this.displayButton(
+                buttonX,
+                buttonY,
+                `Reset progress`,
+                Global.maxLevel > 1,
+                () => {
+                    Global.resetLevel();
+                    console.log(`Reset progress`);
+                    this.scene.start('MainMenu');
+                }
+            );
+        }
     }
 
     displayButton(x: number, y: number, text: string, enabled: boolean, callback: () => void) {
