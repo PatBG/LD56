@@ -56,7 +56,7 @@ export class Player {
             }
             else {
                 if (moveLeft || moveRight) {
-                    this.sprite.body.setVelocityY(-200);
+                    // this.sprite.body.setVelocityY(-200);         // Uncomment to make the player jump while walking
                 }
             }
         }
