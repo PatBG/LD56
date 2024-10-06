@@ -1,6 +1,8 @@
 
 export abstract class Global {
 
+    public static readonly debug = false;
+
     public static readonly SCREEN_WIDTH: number = 922;
     public static readonly SCREEN_HEIGHT: number = 487;
     public static readonly SCREEN_CENTER_X: number = Global.SCREEN_WIDTH / 2;
