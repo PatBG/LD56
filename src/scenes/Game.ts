@@ -152,8 +152,9 @@ export class Game extends Scene {
     endGame() {
         console.log(`End of game`);
         this.displayBigButton(
-            "Congratulations, you finished that game!\r\n" +
+            "THE END\r\n" +
             "\r\n" +
+            "Thank you for playing\r\n" +
             "                                                      PatBG",
             () => {
             this.scene.start('MainMenu');
