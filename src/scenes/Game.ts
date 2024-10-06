@@ -3,6 +3,13 @@ import { Creature, CreatureState } from '../components/Creature';
 import { Player } from '../components/Player';
 import { Global } from '../components/Global';
 
+export enum TilesetCoin {
+    Feed = 33,
+    SpawnCreature,
+    Nest,
+    SpawnPlayer
+}
+
 export class Game extends Scene {
     player: Player;
     coinLayer: Phaser.Tilemaps.TilemapLayer | null;
@@ -54,11 +61,11 @@ export class Game extends Scene {
         // add coins as tiles
         this.coinLayer = map.createLayer('Coins', coinTiles, 0, 0);
         if (!this.coinLayer) { console.error('coinLayer is not set'); return; }
-        this.coinLayer.setTileIndexCallback([17, 19], this.collectCoin, this);
+        this.coinLayer.setTileIndexCallback([TilesetCoin.Feed, TilesetCoin.Nest], this.collectCoin, this);
 
         this.creatures = [];
         this.coinLayer.forEachTile(tile => {
-            if (tile.index === 18) {
+            if (tile.index === TilesetCoin.SpawnCreature) {
                 const creature = new Creature(this, groundLayer, tile.x * 48 + 24, tile.y * 48 + 24);
                 if (this.coinLayer != null) {
                     creature.coinCollider = this.physics.add.overlap(creature.sprite, this.coinLayer);
@@ -66,10 +73,10 @@ export class Game extends Scene {
                 this.creatures.push(creature);
                 this.coinLayer?.removeTileAt(tile.x, tile.y);
             }
-            else if (tile.index === 19) {
+            else if (tile.index === TilesetCoin.Nest) {
                 tile.setVisible(false);
             }
-            else if (tile.index === 20) {
+            else if (tile.index === TilesetCoin.SpawnPlayer) {
                 this.player.sprite.setPosition(tile.x * 48 + 24, tile.y * 48 + 24);
                 this.coinLayer?.removeTileAt(tile.x, tile.y);
             }
@@ -102,14 +109,14 @@ export class Game extends Scene {
     collectCoin(sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
         this.creatures.forEach(creature => {
             if (creature.sprite === sprite) {
-                if (creature.creatureState === CreatureState.Hungry && tile.index === 17) {
+                if (creature.creatureState === CreatureState.Hungry && tile.index === TilesetCoin.Feed) {
                     creature.creatureState = CreatureState.Feeded;
                     creature.sprite.setFrame(creature.sprite.frame.name + 2);
                     this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
                     this.nbFeeded++;
                     this.displayScore();
                 }
-                else if (creature.creatureState === CreatureState.Feeded && tile.index === 19) {
+                else if (creature.creatureState === CreatureState.Feeded && tile.index === TilesetCoin.Nest) {
                     creature.creatureState = CreatureState.Sleepy;
                     creature.sprite.setFrame(4);
                     creature.coinCollider.destroy(); // remove the collider
