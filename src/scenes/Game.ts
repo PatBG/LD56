@@ -139,8 +139,10 @@ export class Game extends Scene {
     endLevel() {
         console.log(`End of level`);
         if (Global.level < Global.totalLevels) {
-            Global.level++;
-            this.scene.start('Game');
+            this.displayBigButton(`Level ${Global.level} completed`, () => {
+                Global.level++;
+                this.scene.start('Game');
+            });
         }
         else {
             this.endGame();
@@ -149,6 +151,26 @@ export class Game extends Scene {
 
     endGame() {
         console.log(`End of game`);
-        this.scene.start('MainMenu');
+        this.displayBigButton(
+            "Congratulations, you finished that game!\r\n" +
+            "\r\n" +
+            "                                                      PatBG",
+            () => {
+            this.scene.start('MainMenu');
+        });
+    }
+
+    displayBigButton(text: string, callback: () => void) {
+        const x = Global.SCREEN_CENTER_X;
+        const y = Global.SCREEN_CENTER_Y;
+        this.add.nineslice(x, y, 'button', 0, 600, 200, 16, 16, 16, 16)
+            .setScrollFactor(0)
+            .setDepth(2)
+            .setInteractive()
+            .on('pointerup', callback);
+        this.add.text(x, y, text, Global.SCORE_STYLE)
+            .setScrollFactor(0)
+            .setDepth(2)
+            .setOrigin(0.5);
     }
 }
