@@ -1,13 +1,17 @@
 import { Scene } from 'phaser';
-import { Creature } from '../components/creature';
+import { Creature, CreatureState } from '../components/Creature';
 import { Player } from '../components/Player';
 
 export class Game extends Scene {
     player: Player;
     coinLayer: Phaser.Tilemaps.TilemapLayer | null;
     text: Phaser.GameObjects.Text;
-    score: number;
     creatures: Creature[];
+
+    // Scrores numbers
+    nbSatiated: number;
+    nbSleepy: number;
+    nbCreatures: number;
 
     constructor() {
         super('Game');
@@ -29,6 +33,12 @@ export class Game extends Scene {
         const groundLayer = map.createLayer('World', groundTiles, 0, 0);
         if (!groundLayer) { console.error('groundLayer is not set'); return; }
 
+        // Create eye candy layers
+        map.createLayer('Background', groundTiles, 0, 0);
+        const foregroundLayer = map.createLayer('Foreground', groundTiles, 0, 0);
+        if (!foregroundLayer) { console.error('foregroundLayer is not set'); return; }
+        foregroundLayer.depth = 1;
+
         // the player will collide with this layer
         groundLayer.setCollisionByExclusion([-1]);
         // set the boundaries of our game world
@@ -43,29 +53,29 @@ export class Game extends Scene {
         // add coins as tiles
         this.coinLayer = map.createLayer('Coins', coinTiles, 0, 0);
         if (!this.coinLayer) { console.error('coinLayer is not set'); return; }
-        this.coinLayer.setTileIndexCallback(17, this.collectCoin, this); // the coin id is 17
-        // when the player overlaps with a tile with index 17, collectCoin will be called    
-        // this.physics.add.overlap(this.player.sprite, this.coinLayer);
+        this.coinLayer.setTileIndexCallback([17, 19], this.collectCoin, this);
 
         this.creatures = [];
-        // for (let i = 0; i < 10; i++) {
-        //     const creature = new Creature(this, groundLayer, 200 + i * 50, 100);
-        //     this.physics.add.overlap(creature.sprite, this.coinLayer);
-        //     this.creatures.push(creature);
-        // }
-
         this.coinLayer.forEachTile(tile => {
             if (tile.index === 18) {
                 const creature = new Creature(this, groundLayer, tile.x * 48 + 24, tile.y * 48 + 24);
                 if (this.coinLayer != null) {
-                    this.physics.add.overlap(creature.sprite, this.coinLayer);
+                    creature.coinCollider = this.physics.add.overlap(creature.sprite, this.coinLayer);
                 }
                 this.creatures.push(creature);
                 this.coinLayer?.removeTileAt(tile.x, tile.y);
             }
+            else if (tile.index === 19) {
+                tile.setVisible(false);
+            }
+            else if (tile.index === 20) {
+                this.player.sprite.setPosition(tile.x * 48 + 24, tile.y * 48 + 24);
+                this.coinLayer?.removeTileAt(tile.x, tile.y);
+            }
         });
+        this.nbCreatures = this.creatures.length;
 
-        this.text = this.add.text(-144, -72, '0', {
+        this.text = this.add.text(-144, -72, '', {
             fontSize: '20px',
             backgroundColor: '#ffffff',
             padding: {
@@ -77,7 +87,9 @@ export class Game extends Scene {
             color: '#000000'
         });
         this.text.setScrollFactor(0);
-        this.score = 0;
+        this.nbSatiated = 0;
+        this.nbSleepy = 0;
+        this.displayScore();
 
         // set bounds so the camera won't go outside the game world
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -95,10 +107,35 @@ export class Game extends Scene {
             this.player.sprite.x, this.player.sprite.y));
     }
 
-    collectCoin(_sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
-        this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile/coin
-        this.score++;                                      // increment the score
-        this.text.setText(`${this.score}`);                 // set the text to show the current score
+    collectCoin(sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
+        this.creatures.forEach(creature => {
+            if (creature.sprite === sprite) {
+                if (creature.creatureState === CreatureState.Hungry && tile.index === 17) {
+                    creature.creatureState = CreatureState.Satiated;
+                    creature.sprite.setFrame(creature.sprite.frame.name + 2);
+                    this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
+                    this.nbSatiated++;
+                    this.displayScore();
+                }
+                else if (creature.creatureState === CreatureState.Satiated && tile.index === 19) {
+                    creature.creatureState = CreatureState.Sleepy;
+                    creature.sprite.setFrame(4);
+
+                    // console.log("CreatureState.Sleepy", creature.sprite.body.friction, creature.sprite.body.mass);
+                    // creature.sprite.body.friction = new Phaser.Math.Vector2(1, 10);
+                    // creature.sprite.body.mass = 0.1;
+                    // console.log(creature.sprite.body.friction, creature.sprite.body.mass);
+
+                    creature.coinCollider.destroy(); // remove the collider
+                    this.nbSleepy++;
+                    this.displayScore();
+                }
+            }
+        });
         return false;
+    }
+
+    displayScore() {
+        this.text.setText(`${this.nbSatiated}/${this.nbCreatures} Satiated   ${this.nbSleepy}/${this.nbCreatures} Sleepy`);
     }
 }
