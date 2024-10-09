@@ -139,7 +139,6 @@ export class Game extends Scene {
     }
 
     endLevel() {
-        console.log(`End of level`);
         if (Global.level < Global.totalLevels) {
             this.displayBigButton(`Level ${Global.level} completed`, () => {
                 Global.level++;
@@ -152,7 +151,6 @@ export class Game extends Scene {
     }
 
     endGame() {
-        console.log(`End of game`);
         this.displayBigButton(
             "THE END\r\n" +
             "\r\n" +

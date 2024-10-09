@@ -26,19 +26,16 @@ export class MainMenu extends Scene {
             'using Phaser 3, TypeScript, Tiled, Krita and VS Code',
             Global.SCORE_STYLE).setOrigin(0.5);
 
-        // console.log(`Levels: ${Global.level}/${Global.maxLevel} of ${Global.totalLevels}`);
-
         const buttonX = Global.SCREEN_CENTER_X;
         const buttonY = Global.SCREEN_CENTER_Y;
         for (let i = 1; i <= Global.totalLevels; i++) {
             this.displayButton(
                 buttonX + ((i % 2 ? -200 : 200)),
                 buttonY + (Math.floor((i - 1) / 2)) * 80,
-                `Level ${i}`, // + (i == 1 ? ' (guide)' : ''),
+                `Level ${i}`,
                 i <= Global.maxLevel,
                 () => {
                     Global.level = i;
-                    // console.log(`Starting level ${i}`);
                     this.scene.start('Game');
                 }
             );
