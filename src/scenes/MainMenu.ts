@@ -26,9 +26,7 @@ export class MainMenu extends Scene {
             'using Phaser 3, TypeScript, Tiled, Krita and VS Code',
             Global.SCORE_STYLE).setOrigin(0.5);
 
-        // Global.resetLevel();
-
-        console.log(`Levels: ${Global.level}/${Global.maxLevel} of ${Global.totalLevels}`);
+        // console.log(`Levels: ${Global.level}/${Global.maxLevel} of ${Global.totalLevels}`);
 
         const buttonX = Global.SCREEN_CENTER_X;
         const buttonY = Global.SCREEN_CENTER_Y;
@@ -40,7 +38,7 @@ export class MainMenu extends Scene {
                 i <= Global.maxLevel,
                 () => {
                     Global.level = i;
-                    console.log(`Starting level ${i}`);
+                    // console.log(`Starting level ${i}`);
                     this.scene.start('Game');
                 }
             );
