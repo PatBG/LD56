@@ -35,6 +35,9 @@ export class MainMenu extends Scene {
                 `Level ${i}`,
                 i <= Global.maxLevel,
                 () => {
+                    if (!this.sys.game.device.os.desktop && !this.scale.isFullscreen) {
+                        this.scale.startFullscreen();
+                    }
                     Global.level = i;
                     this.scene.start('Game');
                 }
