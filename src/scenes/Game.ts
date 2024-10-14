@@ -26,10 +26,6 @@ export class Game extends Scene {
     }
 
     create() {
-        this.input.keyboard?.addKey('ESC').on('down', () => {
-            this.scene.start('MainMenu');
-        }, this);
-
         // load the map 
         const map = this.make.tilemap({ key: `map${Global.level}` });
 
@@ -85,7 +81,7 @@ export class Game extends Scene {
         });
         this.nbCreatures = this.creatures.length;
 
-        this.textScore = this.add.text(-144, -72, '', Global.SCORE_STYLE);
+        this.textScore = this.add.text(Global.screenToCameraX(10), Global.screenToCameraY(10), '', Global.SCORE_STYLE);
         this.textScore.setScrollFactor(0);
 
         this.nbFeeded = 0;
@@ -99,10 +95,11 @@ export class Game extends Scene {
         this.cameras.main.setDeadzone(400, 200);
         // set background color, so the sky is not black    
         this.cameras.main.setBackgroundColor('#CCCCFF');
-        this.cameras.main.setZoom(0.75);
+        this.cameras.main.setZoom(Global.ZOOM_FACTOR);
     }
 
     update(_time: number, _delta: number): void {
+        this.displayScore(); // DEBUG
         this.player.update(_time, _delta);
         this.creatures.forEach(creature => creature.update(this.player.isAction, this.player.IsInRangeForAction.bind(this.player),
             this.player.sprite.x, this.player.sprite.y));
@@ -135,6 +132,7 @@ export class Game extends Scene {
 
     displayScore() {
         const txt = `${this.nbFeeded}/${this.nbCreatures} Feeded     ${this.nbSleepy}/${this.nbCreatures} Sleepy`;
+        //  + ` x=${this.input.pointer1.x.toFixed()} y=${this.input.pointer1.y.toFixed()}`;    // DEBUG
         this.textScore.setText(txt);
     }
 

@@ -64,4 +64,12 @@ export abstract class Global {
         Global._maxLevel = 0;           // Force update of maxLevel
         Global.level = 1;
     }
+
+    public static readonly ZOOM_FACTOR = 0.75;
+    public static screenToCameraX(x: number ): number {
+        return Global.SCREEN_CENTER_X - (Global.SCREEN_CENTER_X - x) / Global.ZOOM_FACTOR;
+    }
+    public static screenToCameraY(y: number ): number {
+        return Global.SCREEN_CENTER_Y - (Global.SCREEN_CENTER_Y - y) / Global.ZOOM_FACTOR;
+    }
 }
