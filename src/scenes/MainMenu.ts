@@ -43,6 +43,7 @@ export class MainMenu extends Scene {
                 }
             );
         }
+        this.scale.stopFullscreen();
 
         if (Global.debug) {
             this.displayButton(
