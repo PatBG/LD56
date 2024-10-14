@@ -16,6 +16,7 @@ export class InputManager {
 
     pointer1IsDown = false;
     pointer2IsDown = false;
+    touchMoveUI: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
@@ -24,14 +25,18 @@ export class InputManager {
         scene.input.addPointer(2);
 
         // Escape button or escape key to go back to main menu
-        const x = Global.SCREEN_WIDTH + 110;
-        const y = -40;
+        const x = Global.screenToCameraX(Global.SCREEN_WIDTH - (10 + 30));
+        const y = Global.screenToCameraY(10 + 30);
         const button = scene.add.nineslice(x, y, 'button', 0, 60, 60, 16, 16, 16, 16);
         button.setScrollFactor(0);
         button.setInteractive().on('pointerup', () => { scene.scene.start('MainMenu'); });
         const text = scene.add.text(x, y, "␛", Global.SCORE_STYLE).setOrigin(0.5);
         text.setScrollFactor(0);
         scene.input.keyboard?.addKey('ESC').on('down', () => { scene.scene.start('MainMenu'); });
+
+        this.touchMoveUI = scene.add.image(256, Global.SCREEN_HEIGHT - 10, 'touch-move-ui').setOrigin(0.5, (256 - 32)/256);
+        this.touchMoveUI.setScrollFactor(0);
+        this.touchMoveUI.setVisible(false);
     }
 
     getInput(x: number, y: number): InputGame {
@@ -66,9 +71,11 @@ export class InputManager {
                 if (!this.touchMove.isDown) {
                     this.touchMove.isDown = true;
                     this.touchMove.index = index;
-                    this.touchMove.initialX = pointer.worldX;
-                    this.touchMove.initialY = pointer.worldY;
-                    this.touchMove.isDown = true;
+                    this.touchMove.initialX = pointer.x;
+                    this.touchMove.initialY = pointer.y;
+                    // Update touchMoveUI position
+                    this.touchMoveUI.x = Global.screenToCameraX(pointer.x);
+                    this.touchMoveUI.y = Global.screenToCameraY(pointer.y);
                 }
             }
             else {
@@ -90,8 +97,8 @@ export class InputManager {
 
         // Update touchMove position
         if (this.touchMove.isDown && this.touchMove.index == index) {
-            this.touchMove.pointerX = pointer.worldX;
-            this.touchMove.pointerY = pointer.worldY;
+            this.touchMove.pointerX = pointer.x;
+            this.touchMove.pointerY = pointer.y;
         }
 
         return memoIsDown;
