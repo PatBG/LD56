@@ -46,6 +46,8 @@ export class Preloader extends Scene {
         this.load.spritesheet('creature', 'creature.png', { frameWidth: 16, frameHeight: 16 });
 
         this.load.image('button', 'button.png');
+
+        this.load.image('touch-move-ui', 'touch-move-ui.png');
     }
 
     create() {
