@@ -45,6 +45,22 @@ export class Game extends Scene {
         if (!foregroundLayer) { console.error('foregroundLayer is not set'); return; }
         foregroundLayer.depth = 1;
 
+        if (Global.level === 1) {
+            const helpSignLayer = map.createLayer('Help sign', groundTiles, 0, 0);
+            if (!helpSignLayer) { console.error('helpSignLayer is not set'); return; }
+            helpSignLayer.depth = -0.5;
+            if (this.sys.game.device.os.desktop) {
+                const helpDesktopLayer = map.createFromObjects('Help desktop', { gid: 43, key: 'help-desktop' });
+                if (!helpDesktopLayer) { console.error('helpDesktopLayer is not set'); return; }
+                // helpDesktopLayer.depth = 0.5;
+            }
+            else {
+                const helpMobileLayer = map.createFromObjects('Help mobile', { gid: 44, key: 'help-mobile' });
+                if (!helpMobileLayer) { console.error('helpMobileLayer is not set'); return; }
+                // helpMobileLayer.depth = 0.5;
+            }
+        }
+
         // the player will collide with this layer
         groundLayer.setCollisionByExclusion([-1]);
         // set the boundaries of our game world

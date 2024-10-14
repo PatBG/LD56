@@ -48,6 +48,9 @@ export class Preloader extends Scene {
         this.load.image('button', 'button.png');
 
         this.load.image('touch-move-ui', 'touch-move-ui.png');
+
+        this.load.image('help-mobile', 'help-mobile.png');
+        this.load.image('help-desktop', 'help-desktop.png');
     }
 
     create() {
