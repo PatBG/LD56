@@ -49,6 +49,7 @@ export class Preloader extends Scene {
 
         this.load.image('touch-move-ui', 'touch-move-ui.png');
 
+        this.load.image('sign', 'sign.png');
         this.load.image('help-mobile', 'help-mobile.png');
         this.load.image('help-desktop', 'help-desktop.png');
     }

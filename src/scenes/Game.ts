@@ -36,6 +36,7 @@ export class Game extends Scene {
         // create the ground layer
         const groundLayer = map.createLayer('World', groundTiles, 0, 0);
         if (!groundLayer) { console.error('groundLayer is not set'); return; }
+        groundLayer.depth = 0.1;
 
         // Create eye candy layers
         const backgroundLayer = map.createLayer('Background', groundTiles, 0, 0);
@@ -46,9 +47,9 @@ export class Game extends Scene {
         foregroundLayer.depth = 1;
 
         if (Global.level === 1) {
-            const helpSignLayer = map.createLayer('Help sign', groundTiles, 0, 0);
+            const helpSignLayer = map.createFromObjects('Help sign', { gid: 45, key: 'sign' });
             if (!helpSignLayer) { console.error('helpSignLayer is not set'); return; }
-            helpSignLayer.depth = -0.5;
+            // helpSignLayer.depth = -0.5;
             if (this.sys.game.device.os.desktop) {
                 const helpDesktopLayer = map.createFromObjects('Help desktop', { gid: 43, key: 'help-desktop' });
                 if (!helpDesktopLayer) { console.error('helpDesktopLayer is not set'); return; }
