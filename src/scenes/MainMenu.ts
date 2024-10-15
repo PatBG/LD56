@@ -14,7 +14,7 @@ export class MainMenu extends Scene {
         this.add.image(Global.SCREEN_CENTER_X, Global.SCREEN_CENTER_Y, 'background');
 
         this.add.text(Global.SCREEN_CENTER_X, Global.SCREEN_CENTER_Y - 220,
-            'Game Jam: Ludum Dare 56       Theme: Tiny creatures       October 6, 2024',
+            'Game Jam: Ludum Dare 56       Theme: Tiny creatures         October 2024',
             Global.SCORE_STYLE).setOrigin(0.5);
 
         this.add.text(Global.SCREEN_CENTER_X, Global.SCREEN_CENTER_Y - 170,
@@ -22,7 +22,7 @@ export class MainMenu extends Scene {
             Global.MENU_STYLE).setOrigin(0.5);
 
         this.add.text(Global.SCREEN_CENTER_X, Global.SCREEN_CENTER_Y - 100,
-            'Created in 48h (Compo version)\r\n' +
+            '(Post-jam version)\r\n' +
             'using Phaser 3, TypeScript, Tiled, Krita and VS Code',
             Global.SCORE_STYLE).setOrigin(0.5);
 
