@@ -9,7 +9,7 @@ export class Player {
     scene: Phaser.Scene;
     inputManager: InputManager;
 
-    constructor(scene: Phaser.Scene, groundLayer: Phaser.Tilemaps.TilemapLayer, x: number, y: number) {
+    constructor(scene: Phaser.Scene, groundLayer: Phaser.Tilemaps.TilemapLayer, layerUI: Phaser.GameObjects.Layer, x: number, y: number) {
         this.scene = scene;
         // create the player sprite    
         this.sprite = scene.physics.add.sprite(x, y, 'player');
@@ -18,7 +18,7 @@ export class Player {
         this.sprite.setCollideWorldBounds(true); // don't go out of the map
         scene.physics.add.collider(groundLayer, this.sprite);
 
-        this.inputManager = new InputManager(scene);
+        this.inputManager = new InputManager(scene, layerUI);
 
         // scene.anims.create({
         //     key: 'walk',

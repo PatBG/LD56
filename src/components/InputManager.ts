@@ -18,7 +18,7 @@ export class InputManager {
     pointer2IsDown = false;
     touchMoveUI: Phaser.GameObjects.Image;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, layerUI: Phaser.GameObjects.Layer) {
         this.scene = scene;
         this.cursors = scene.input.keyboard?.createCursorKeys();
 
@@ -29,14 +29,17 @@ export class InputManager {
         const y = Global.screenToCameraY(10 + 30);
         const button = scene.add.nineslice(x, y, 'button', 0, 60, 60, 16, 16, 16, 16);
         button.setScrollFactor(0);
+        layerUI.add(button);
         button.setInteractive().on('pointerup', () => { scene.scene.start('MainMenu'); });
         const text = scene.add.text(x, y, "␛", Global.SCORE_STYLE).setOrigin(0.5);
         text.setScrollFactor(0);
+        layerUI.add(text);
         scene.input.keyboard?.addKey('ESC').on('down', () => { scene.scene.start('MainMenu'); });
 
         this.touchMoveUI = scene.add.image(256, Global.SCREEN_HEIGHT - 10, 'touch-move-ui').setOrigin(0.5, (256 - 32)/256);
         this.touchMoveUI.setScrollFactor(0);
-        this.touchMoveUI.setVisible(false);
+        layerUI.add(this.touchMoveUI);
+        this.touchMoveUI.setVisible(false);         // Hide the touchMoveUI (TODO: create a nice touchMoveUI picture)
     }
 
     getInput(x: number, y: number): InputGame {

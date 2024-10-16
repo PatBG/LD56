@@ -20,12 +20,16 @@ export class Game extends Scene {
     nbFeeded: number;
     nbSleepy: number;
     nbCreatures: number;
+    layerUI: Phaser.GameObjects.Layer;
 
     constructor() {
         super('Game');
     }
 
     create() {
+        this.layerUI = this.add.layer();
+        this.layerUI.setDepth(2);
+
         // load the map 
         const map = this.make.tilemap({ key: `map${Global.level}` });
 
@@ -68,7 +72,7 @@ export class Game extends Scene {
         this.physics.world.bounds.width = groundLayer.width;
         this.physics.world.bounds.height = groundLayer.height;
 
-        this.player = new Player(this, groundLayer, 200, 200);
+        this.player = new Player(this, groundLayer, this.layerUI, 200, 200);
 
         // coin image used as tileset
         const coinTiles = map.addTilesetImage('coin');
@@ -100,6 +104,7 @@ export class Game extends Scene {
 
         this.textScore = this.add.text(Global.screenToCameraX(10), Global.screenToCameraY(10), '', Global.SCORE_STYLE);
         this.textScore.setScrollFactor(0);
+        this.layerUI.add(this.textScore);
 
         this.nbFeeded = 0;
         this.nbSleepy = 0;
@@ -172,21 +177,23 @@ export class Game extends Scene {
             "Thank you for playing\r\n" +
             "                                                      PatBG",
             () => {
-            this.scene.start('MainMenu');
-        });
+                this.scene.start('MainMenu');
+            });
     }
 
     displayBigButton(text: string, callback: () => void) {
         const x = Global.SCREEN_CENTER_X;
         const y = Global.SCREEN_CENTER_Y;
-        this.add.nineslice(x, y, 'button', 0, 600, 200, 16, 16, 16, 16)
+        const button = this.add.nineslice(x, y, 'button', 0, 600, 200, 16, 16, 16, 16)
             .setScrollFactor(0)
             .setDepth(2)
             .setInteractive()
             .on('pointerup', callback);
-        this.add.text(x, y, text, Global.SCORE_STYLE)
+        this.layerUI.add(button);
+        const buttonText = this.add.text(x, y, text, Global.SCORE_STYLE)
             .setScrollFactor(0)
             .setDepth(2)
             .setOrigin(0.5);
+        this.layerUI.add(buttonText);
     }
 }
