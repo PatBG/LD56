@@ -4,7 +4,7 @@ import { Player } from '../components/Player';
 import { Global } from '../components/Global';
 
 export enum TilesetCoin {
-    Feed = 33,
+    Food = 33,
     SpawnCreature,
     Nest,
     SpawnPlayer
@@ -80,7 +80,8 @@ export class Game extends Scene {
         // add coins as tiles
         this.coinLayer = map.createLayer('Coins', coinTiles, 0, 0);
         if (!this.coinLayer) { console.error('coinLayer is not set'); return; }
-        this.coinLayer.setTileIndexCallback([TilesetCoin.Feed, TilesetCoin.Nest], this.collectCoin, this);
+        this.coinLayer.setTileIndexCallback(TilesetCoin.Food, this.collisionFood, this);
+        this.coinLayer.setTileIndexCallback(TilesetCoin.Nest, this.collisionNest, this);
 
         this.creatures = [];
         this.coinLayer.forEachTile(tile => {
@@ -127,29 +128,27 @@ export class Game extends Scene {
             this.player.sprite.x, this.player.sprite.y));
     }
 
-    collectCoin(sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
-        this.creatures.forEach(creature => {
-            if (creature.sprite === sprite) {
-                if (creature.creatureState === CreatureState.Hungry && tile.index === TilesetCoin.Feed) {
-                    creature.creatureState = CreatureState.Feeded;
-                    creature.sprite.setFrame(creature.sprite.frame.name + 2);
-                    this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
-                    this.nbFeeded++;
-                    this.displayScore();
-                    creature.gloupSound.play();
-                }
-                else if (creature.creatureState === CreatureState.Feeded && tile.index === TilesetCoin.Nest) {
-                    creature.creatureState = CreatureState.Sleepy;
-                    creature.sprite.setFrame(4);
-                    creature.coinCollider.destroy(); // remove the collider
-                    this.nbSleepy++;
-                    this.displayScore();
-                    if (this.nbSleepy === this.nbCreatures) {
-                        this.endLevel();
-                    }
-                }
+    collisionFood(sprite: Phaser.GameObjects.Sprite, tile: Phaser.Tilemaps.Tile) {
+        const creature = this.creatures.find(creature => creature.sprite === sprite);
+        if (creature?.creatureState === CreatureState.Hungry) {
+            creature.setFeeded();
+            this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
+            this.nbFeeded++;
+            this.displayScore();
+        }
+        return false;
+    }
+
+    collisionNest(sprite: Phaser.GameObjects.Sprite, _tile: Phaser.Tilemaps.Tile) {
+        const creature = this.creatures.find(creature => creature.sprite === sprite);
+        if (creature?.creatureState === CreatureState.Feeded) {
+            creature.setSleepy();
+            this.nbSleepy++;
+            this.displayScore();
+            if (this.nbSleepy === this.nbCreatures) {
+                this.endLevel();
             }
-        });
+        }
         return false;
     }
 

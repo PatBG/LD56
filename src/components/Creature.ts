@@ -71,4 +71,16 @@ export class Creature {
             }
         }
     }
+
+    setFeeded() {
+        this.creatureState = CreatureState.Feeded;
+        this.sprite.setFrame(this.sprite.frame.name + 2);
+        this.gloupSound.play();
+    }
+
+    setSleepy() {
+        this.creatureState = CreatureState.Sleepy;
+        this.sprite.setFrame(4);
+        this.coinCollider.destroy(); // remove the collider
+    }
 }
