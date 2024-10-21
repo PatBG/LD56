@@ -52,6 +52,11 @@ export class Preloader extends Scene {
         this.load.image('sign', 'sign.png');
         this.load.image('help-mobile', 'help-mobile.png');
         this.load.image('help-desktop', 'help-desktop.png');
+
+        this.load.audio('gloup', 'gloup.wav');
+
+        this.load.audio('jump1', 'jump1.wav');
+        this.load.audio('jump2', 'jump2.wav');
     }
 
     create() {

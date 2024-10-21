@@ -14,6 +14,9 @@ export class Creature {
     creatureState: CreatureState;
     coinCollider: Phaser.Physics.Arcade.Collider;
     goToPlayer: boolean;        // When triggered, the creature will jump to player, even if he goes out of the range
+    gloupSound: Phaser.Sound.BaseSound;
+    jump1Sound: Phaser.Sound.BaseSound;
+    jump2Sound: Phaser.Sound.BaseSound;
 
     constructor(scene: Phaser.Scene, groundLayer: Phaser.Tilemaps.TilemapLayer, x: number, y: number) {
         this.creatureState = CreatureState.Hungry;
@@ -22,6 +25,10 @@ export class Creature {
         this.sprite.setBounce(0.2);
         this.sprite.setCollideWorldBounds(true);                    // don't go out of the map
         scene.physics.add.collider(groundLayer, this.sprite);       // ensure groundLayer is passed as an argument
+
+        this.gloupSound = scene.sound.add('gloup');
+        this.jump1Sound = scene.sound.add('jump1', {volume: 0.2});
+        this.jump2Sound = scene.sound.add('jump2', {volume: 0.2});
     }
 
     update(isAction: boolean, isInRangeCallback: IsInRange, x: number, y: number) {
@@ -55,9 +62,11 @@ export class Creature {
                     const velocity_x = delta_x * coef_x;
                     const velocity_y = Math.min(-idle_jump, delta_y * coef_y);
                     this.sprite.body.setVelocity(velocity_x, velocity_y);                   // jump to player
+                    this.jump2Sound.play();
                 }
                 else {
                     this.sprite.body.setVelocity(Phaser.Math.Between(-4, 4), -idle_jump);   // jump idle
+                    this.jump1Sound.play();
                 }
             }
         }

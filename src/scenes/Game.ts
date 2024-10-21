@@ -136,6 +136,7 @@ export class Game extends Scene {
                     this.coinLayer?.removeTileAt(tile.x, tile.y);       // remove the tile
                     this.nbFeeded++;
                     this.displayScore();
+                    creature.gloupSound.play();
                 }
                 else if (creature.creatureState === CreatureState.Feeded && tile.index === TilesetCoin.Nest) {
                     creature.creatureState = CreatureState.Sleepy;
