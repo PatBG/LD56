@@ -13,19 +13,17 @@ export class Player {
         this.scene = scene;
         // create the player sprite    
         this.sprite = scene.physics.add.sprite(x, y, 'player');
-        //this.sprite.setCircle(this.sprite.width / 2);
+        // this.sprite.setCircle(this.sprite.width / 2);                // TODO: circle collision doesn't seems to work with tiles
         this.sprite.setBounce(0.2); // our player will bounce from items
         this.sprite.setCollideWorldBounds(true); // don't go out of the map
         scene.physics.add.collider(groundLayer, this.sprite);
 
         this.inputManager = new InputManager(scene, layerUI);
 
-        // scene.anims.create({
-        //     key: 'walk',
-        //     frames: scene.anims.generateFrameNames('player', { prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2 }),
-        //     frameRate: 10,
-        //     repeat: -1
-        // });
+        // DEBUG: Add a block to test collision with the player sprite
+        // const blockTest = scene.physics.add.staticImage(1000, 850, 'button');
+        // scene.physics.add.collider(blockTest, this.sprite);
+        // blockTest.setDepth(10);
 
         this.graphics = scene.add.graphics();
     }
