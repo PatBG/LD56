@@ -34,7 +34,7 @@ export class Game extends Scene {
         const map = this.make.tilemap({ key: `map${Global.level}` });
 
         // tiles for the ground layer
-        const groundTiles = map.addTilesetImage('tiles');
+        const groundTiles = map.addTilesetImage('tiles', 'tiles', 48, 48, 1, 2);
         if (!groundTiles) { console.error('groundTiles is not set'); return; }
 
         // create the ground layer

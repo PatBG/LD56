@@ -37,7 +37,8 @@ export class Preloader extends Scene {
         this.load.tilemapTiledJSON('mapTest', 'mapTest.json');
 
         // tiles in spritesheet 
-        this.load.spritesheet('tiles', 'tiles.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.image('tiles', 'tiles-extruded.png');
+
         // tiles coin image
         this.load.spritesheet('coin', 'coinGold.png', { frameWidth: 48, frameHeight: 48 });
         // player animations
