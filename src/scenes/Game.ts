@@ -4,7 +4,7 @@ import { Player } from '../components/Player';
 import { Global } from '../components/Global';
 
 export enum TilesetCoin {
-    Food = 33,
+    Food = 41,
     SpawnCreature,
     Nest,
     SpawnPlayer
@@ -45,6 +45,11 @@ export class Game extends Scene {
         const groundLayerForeground = map.createLayer('World foreground', groundTiles, 0, 0);
         if (!groundLayerForeground) { console.error('groundLayerForeground is not set'); return; }
         groundLayerForeground.depth = 1.1;
+
+        const groundLayerForeground2 = map.createLayer('World foreground 2', groundTiles, 0, 0);
+        if (groundLayerForeground2) {           // optional layer
+            groundLayerForeground2.depth = 1.2;
+        }
 
         // Create eye candy layers
         const backgroundLayer = map.createLayer('Background', groundTiles, 0, 0);
